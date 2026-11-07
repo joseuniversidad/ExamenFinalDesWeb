@@ -14,6 +14,7 @@ public final class TaskRepository {
         return instance;
     }
     public List<Task> all() { return new ArrayList<>(tasks); }
+    public void delete(String id) { tasks.removeIf(task -> task.id.equals(id)); }
     public void setCompleted(String id, boolean completed) {
         Task task = find(id);
         if (task != null) task.completed = completed;
