@@ -19,6 +19,7 @@ public final class MainActivity extends Activity {
         TextView empty = Ui.text(this, "Aún no hay tareas. Agrega tu primer pendiente.", 18);
         root.addView(empty); list.setEmptyView(empty);
         root.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
+        Ui.button(this, root, "+ Nueva tarea", v -> startActivity(new android.content.Intent(this, AddTaskActivity.class)));
     }
     @Override protected void onResume() { super.onResume(); refresh(); }
     private void refresh() {

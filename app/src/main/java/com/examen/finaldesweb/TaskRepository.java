@@ -14,6 +14,13 @@ public final class TaskRepository {
         return instance;
     }
     public List<Task> all() { return new ArrayList<>(tasks); }
+    public Task add(String description) {
+        String clean = description.trim();
+        if (clean.isEmpty() || clean.length() > 500) throw new IllegalArgumentException("Escribe entre 1 y 500 caracteres");
+        Task task = new Task(java.util.UUID.randomUUID().toString(), clean, System.currentTimeMillis(), false);
+        tasks.add(0, task);
+        return task;
+    }
     public Task find(String id) {
         for (Task task : tasks) if (task.id.equals(id)) return task;
         return null;
