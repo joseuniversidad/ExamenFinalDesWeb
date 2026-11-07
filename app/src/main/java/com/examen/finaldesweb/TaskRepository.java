@@ -14,6 +14,10 @@ public final class TaskRepository {
         return instance;
     }
     public List<Task> all() { return new ArrayList<>(tasks); }
+    public void setCompleted(String id, boolean completed) {
+        Task task = find(id);
+        if (task != null) task.completed = completed;
+    }
     public Task add(String description) {
         String clean = description.trim();
         if (clean.isEmpty() || clean.length() > 500) throw new IllegalArgumentException("Escribe entre 1 y 500 caracteres");

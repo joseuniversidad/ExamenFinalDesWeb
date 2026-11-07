@@ -16,11 +16,28 @@ public final class TaskAdapter extends BaseAdapter {
     @Override public Task getItem(int position) { return tasks.get(position); }
     @Override public long getItemId(int position) { return position; }
     @Override public View getView(int position, View recycled, ViewGroup parent) {
-        TextView row = recycled instanceof TextView ? (TextView) recycled : Ui.text(activity, "", 18);
+        LinearLayout row;
+        if (recycled instanceof LinearLayout) row = (LinearLayout) recycled;
+        else {
+            row = new LinearLayout(activity); row.setGravity(Gravity.CENTER_VERTICAL);
+            TextView label = Ui.text(activity, "", 18);
+            row.addView(label, new LinearLayout.LayoutParams(0, -2, 1));
+            CheckBox check = new CheckBox(activity); check.setFocusable(false); row.addView(check);
+        }
+        TextView label = (TextView) row.getChildAt(0);
+        CheckBox check = (CheckBox) row.getChildAt(1);
         Task task = getItem(position);
-        row.setText(task.description + "\n" + (task.completed ? "Completada" : "Pendiente"));
+        label.setText(task.description + "\n" + (task.completed ? "Completada" : "Pendiente"));
+        label.setMaxLines(4); label.setEllipsize(android.text.TextUtils.TruncateAt.END);
         row.setPadding(Ui.dp(activity, 12), Ui.dp(activity, 20), Ui.dp(activity, 12), Ui.dp(activity, 20));
-        row.setPaintFlags(row.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+        label.setPaintFlags(task.completed ? label.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG : label.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+        label.setAlpha(task.completed ? 0.55f : 1f);
+        check.setOnCheckedChangeListener(null); check.setChecked(task.completed);
+        check.setContentDescription("Completar: " + task.description);
+        check.setOnCheckedChangeListener((button, checked) -> {
+            TaskRepository.get(activity).setCompleted(task.id, checked);
+            notifyDataSetChanged();
+        });
         return row;
     }
 }

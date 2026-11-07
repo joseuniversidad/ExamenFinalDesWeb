@@ -23,6 +23,12 @@ public final class DetailActivity extends Activity {
         content.addView(Ui.text(this, task.description, 23));
         content.addView(Ui.text(this, "ESTADO", 12));
         content.addView(Ui.text(this, task.completed ? "Completada" : "Pendiente", 18));
+        CheckBox completed = new CheckBox(this); completed.setText("Tarea completada");
+        completed.setChecked(task.completed); content.addView(completed);
+        completed.setOnCheckedChangeListener((button, checked) -> {
+            TaskRepository.get(this).setCompleted(task.id, checked);
+            ((TextView) content.getChildAt(3)).setText(checked ? "Completada" : "Pendiente");
+        });
         content.addView(Ui.text(this, "FECHA DE CREACIÓN", 12));
         content.addView(Ui.text(this, DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(new Date(task.createdAt)), 18));
         Ui.button(this, root, "Volver a la lista", v -> finish());
