@@ -16,6 +16,8 @@ public final class MainActivity extends Activity {
         ListView list = new ListView(this);
         list.setId(android.R.id.list);
         adapter = new TaskAdapter(this, repository.all()); list.setAdapter(adapter);
+        list.setOnItemClickListener((parent, view, position, id) -> startActivity(
+            new android.content.Intent(this, DetailActivity.class).putExtra(DetailActivity.EXTRA_TASK_ID, adapter.getItem(position).id)));
         TextView empty = Ui.text(this, "Aún no hay tareas. Agrega tu primer pendiente.", 18);
         root.addView(empty); list.setEmptyView(empty);
         root.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
